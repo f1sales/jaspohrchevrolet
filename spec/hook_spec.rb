@@ -1,7 +1,7 @@
 require 'ostruct'
 
 RSpec.describe F1SalesCustom::Hooks::Lead do
-  context "when product comes from Global Conect" do
+  context "when product " do
     let(:lead) do
       lead = OpenStruct.new
       lead.source = source
@@ -17,8 +17,20 @@ RSpec.describe F1SalesCustom::Hooks::Lead do
       source
     end
 
-    it 'when message contains REDE DIGITAL - SEMINOVOS' do
-      expect(described_class.switch_source(lead)).to eq('Global Connect - Santa Cruz - REDE DIGITAL - SEMINOVOS')
+    context 'when product come from Global Connect' do
+      it 'when message contains REDE DIGITAL - SEMINOVOS' do
+        expect(described_class.switch_source(lead)).to eq('Global Connect - Santa Cruz - REDE DIGITAL - SEMINOVOS')
+      end
+    end
+
+    context 'when is not from Global Connect' do
+      before do
+        source.name = 'Different Source'
+      end
+
+      it 'it is not from Global Connect' do
+        expect(described_class.switch_source(lead)).to eq('Different Source')
+      end
     end
 
   end

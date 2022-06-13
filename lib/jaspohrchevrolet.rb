@@ -7,7 +7,13 @@ module Jaspohrchevrolet
   class Error < StandardError; end
   class F1SalesCustom::Hooks::Lead
     def self.switch_source(lead)
-      "#{lead.source.name} - #{lead.message}"  
+      source_name = lead.source.name ? lead.source.name : ''
+
+      if source_name.downcase.include?('global connect')
+        "#{source_name} - #{lead.message}"
+      else
+        source_name
+      end
     end
   end
 end
