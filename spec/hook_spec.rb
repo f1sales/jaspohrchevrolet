@@ -1,7 +1,7 @@
 require 'ostruct'
 
 RSpec.describe F1SalesCustom::Hooks::Lead do
-  context "when product " do
+  context "when product is from API" do
     let(:lead) do
       lead = OpenStruct.new
       lead.source = source
