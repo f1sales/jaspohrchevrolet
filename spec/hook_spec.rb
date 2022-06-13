@@ -28,7 +28,7 @@ RSpec.describe F1SalesCustom::Hooks::Lead do
         source.name = 'Different Source'
       end
 
-      it 'it is not from Global Connect' do
+      it 'is not from Global Connect' do
         expect(described_class.switch_source(lead)).to eq('Different Source')
       end
     end
