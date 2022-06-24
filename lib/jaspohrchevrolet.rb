@@ -5,17 +5,19 @@ require 'f1sales_custom/hooks'
 
 module Jaspohrchevrolet
   class Error < StandardError; end
+
   class F1SalesCustom::Hooks::Lead
     def self.switch_source(lead)
-      source_name = lead.source.name ? lead.source.name : ''
-      message = lead.message ? lead.message : ''
-      product_name = lead.product.name ? lead.product.name : ''
+      source_name = lead.source.name || ''
+      lead_message = lead.message || ''
+      product_name = lead.product.name || ''
 
       if source_name.downcase.include?('global connect')
-        "GC#{source_name.delete_prefix('Global Connect')} - #{lead.message} - #{product_name}"
-      else
-        source_name
+        source_name = "GC#{source_name.delete_prefix('Global Connect')}"
+        source_name += " - #{lead_message}" unless lead_message.empty?
+        source_name += " - #{product_name}" unless product_name.empty?
       end
+      source_name
     end
   end
 end

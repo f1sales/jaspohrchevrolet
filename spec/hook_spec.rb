@@ -1,7 +1,7 @@
 require 'ostruct'
 
 RSpec.describe F1SalesCustom::Hooks::Lead do
-  context "when product is from API" do
+  context "when product is from Global Connect" do
     let(:lead) do
       lead = OpenStruct.new
       lead.source = source
@@ -28,6 +28,20 @@ RSpec.describe F1SalesCustom::Hooks::Lead do
     context 'when product come from Global Connect' do
       it 'when message contains REDE DIGITAL - SEMINOVOS' do
         expect(described_class.switch_source(lead)).to eq('GC - Santa Cruz - REDE DIGITAL - SEMINOVOS - Tracker')
+      end
+    end
+
+    context 'when message is empty and product is not' do
+      before { lead.message = nil }
+      it 'when message contains REDE DIGITAL - SEMINOVOS' do
+        expect(described_class.switch_source(lead)).to eq('GC - Santa Cruz - Tracker')
+      end
+    end
+
+    context 'when product is empty and message is not' do
+      before { lead.product.name = nil }
+      it 'when message contains REDE DIGITAL - SEMINOVOS' do
+        expect(described_class.switch_source(lead)).to eq('GC - Santa Cruz - REDE DIGITAL - SEMINOVOS')
       end
     end
 
