@@ -10,12 +10,10 @@ module Jaspohrchevrolet
     def self.switch_source(lead)
       source_name = lead.source.name || ''
       lead_message = lead.message || ''
-      product_name = lead.product.name || ''
 
       if source_name.downcase.include?('global connect')
         source_name = "GC#{source_name.delete_prefix('Global Connect')}"
         source_name += " - #{lead_message}" unless lead_message.empty?
-        source_name += " - #{product_name}" unless product_name.empty?
       end
       source_name
     end
