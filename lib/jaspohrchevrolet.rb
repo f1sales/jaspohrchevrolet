@@ -14,6 +14,8 @@ module Jaspohrchevrolet
       if source_name.downcase.include?('global connect')
         source_name = "GC#{source_name.delete_prefix('Global Connect')}"
         source_name += " - #{lead_message}" unless lead_message.empty?
+      elsif lead_message.downcase['seminovo']
+        source_name += ' - SEMINOVOS'
       end
       source_name
     end
