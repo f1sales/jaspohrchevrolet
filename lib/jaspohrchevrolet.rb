@@ -7,17 +7,31 @@ module Jaspohrchevrolet
   class Error < StandardError; end
 
   class F1SalesCustom::Hooks::Lead
-    def self.switch_source(lead)
-      source_name = lead.source.name || ''
-      lead_message = lead.message || ''
+    class << self
+      def switch_source(lead)
+        @lead = lead
 
-      if source_name.downcase.include?('global connect')
-        source_name = "GC#{source_name.delete_prefix('Global Connect')}"
-        source_name += " - #{lead_message}" unless lead_message.empty?
-      elsif lead_message.downcase['seminovo']
-        source_name += ' - SEMINOVOS'
+        return "#{source_name} - Oficina" if oficina?
+        return "#{source_name} - SEMINOVOS" if lead_message_down['seminovo']
+
+        source_name
       end
-      source_name
+
+      def lead_message_down
+        @lead.message&.downcase || ''
+      end
+
+      def lead_descrip_down
+        @lead.description&.downcase || ''
+      end
+
+      def source_name
+        @lead.source.name || ''
+      end
+
+      def oficina?
+        lead_descrip_down['agendamento de serv'] || lead_descrip_down['alerta de revis']
+      end
     end
   end
 end

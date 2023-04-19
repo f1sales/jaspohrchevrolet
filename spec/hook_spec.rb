@@ -5,39 +5,40 @@ RSpec.describe F1SalesCustom::Hooks::Lead do
     let(:lead) do
       lead = OpenStruct.new
       lead.source = source
-      lead.message = 'REDE DIGITAL - SEMINOVOS'
+      lead.message = ''
+      lead.description = ''
 
       lead
     end
 
     let(:source) do
       source = OpenStruct.new
-      source.name = 'Global Connect - Santa Cruz'
+      source.name = 'GM - Santa Cruz'
 
       source
     end
 
-    context 'when message is empty' do
-      before { lead.message = nil }
-      it 'when message contains REDE DIGITAL - SEMINOVOS' do
-        expect(described_class.switch_source(lead)).to eq('GC - Santa Cruz')
+    let(:switch_source) { described_class.switch_source(lead) }
+
+    context 'when is a Oficina lead' do
+      before do
+        lead.description = 'Concessionária: J. A. Spohr; Local: LAJEADO; Consulta: Agendamento de Serviços; Oportunidade: Pós-Vendas; Campanha: OPS - ONSTAR - ALERTA DE REVISÃO WHATSAPP'
+      end
+
+      it 'returns GM - Santa Cruz - Oficina' do
+        expect(switch_source).to eq('GM - Santa Cruz - Oficina')
       end
     end
 
-    context 'when message is not empty' do
-      it 'when message contains REDE DIGITAL - SEMINOVOS' do
-        expect(described_class.switch_source(lead)).to eq('GC - Santa Cruz - REDE DIGITAL - SEMINOVOS')
-      end
-    end
-
-    context 'when is not from Global Connect' do
+    context 'when is a different source' do
       before do
         source.name = 'Different Source'
+        lead.message = 'REDE DIGITAL - SEMINOVOS'
       end
 
       context 'when there is SEMINOVOS in message' do
         it 'returns source_name - SEMINOVOS' do
-          expect(described_class.switch_source(lead)).to eq('Different Source - SEMINOVOS')
+          expect(switch_source).to eq('Different Source - SEMINOVOS')
         end
       end
 
@@ -45,7 +46,7 @@ RSpec.describe F1SalesCustom::Hooks::Lead do
         before { lead.message = '' }
 
         it 'returns only source_name' do
-          expect(described_class.switch_source(lead)).to eq('Different Source')
+          expect(switch_source).to eq('Different Source')
         end
       end
     end
