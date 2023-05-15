@@ -12,7 +12,7 @@ module Jaspohrchevrolet
         @lead = lead
 
         return "#{source_name} - Oficina" if oficina?
-        return "#{source_name} - SEMINOVOS" if lead_message_down['seminovo']
+        return "#{source_name} - SEMINOVOS" if lead_message_down['seminovo'] || lead_descrip_down['seminovo']
 
         source_name
       end

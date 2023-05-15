@@ -33,18 +33,30 @@ RSpec.describe F1SalesCustom::Hooks::Lead do
     context 'when is a different source' do
       before do
         source.name = 'Different Source'
-        lead.message = 'REDE DIGITAL - SEMINOVOS'
+        lead.message = ''
       end
 
       context 'when there is SEMINOVOS in message' do
+        before do
+          lead.message = 'REDE DIGITAL - SEMINOVOS'
+        end
+
+        it 'returns source_name - SEMINOVOS' do
+          expect(switch_source).to eq('Different Source - SEMINOVOS')
+        end
+      end
+
+      context 'when there is SEMINOVOS in description' do
+        before do
+          lead.description = 'Concessionária: J. A. Spohr; Local: LAJEADO; Consulta: Solicitar uma Cotação; Oportunidade: Venda de Veículos Usados; Campanha: REDE DIGITAL - SEMINOVOS'
+        end
+
         it 'returns source_name - SEMINOVOS' do
           expect(switch_source).to eq('Different Source - SEMINOVOS')
         end
       end
 
       context 'when there is no SEMINOVOS in message' do
-        before { lead.message = '' }
-
         it 'returns only source_name' do
           expect(switch_source).to eq('Different Source')
         end
